@@ -23,7 +23,7 @@ import type {
   TypedContractMethod,
 } from "../../../../common";
 
-export interface ERC20Interface extends Interface {
+export interface ERC20UpgradeableInterface extends Interface {
   getFunction(
     nameOrSignature:
       | "allowance"
@@ -37,7 +37,9 @@ export interface ERC20Interface extends Interface {
       | "transferFrom"
   ): FunctionFragment;
 
-  getEvent(nameOrSignatureOrTopic: "Approval" | "Transfer"): EventFragment;
+  getEvent(
+    nameOrSignatureOrTopic: "Approval" | "Initialized" | "Transfer"
+  ): EventFragment;
 
   encodeFunctionData(
     functionFragment: "allowance",
@@ -102,6 +104,18 @@ export namespace ApprovalEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
+export namespace InitializedEvent {
+  export type InputTuple = [version: BigNumberish];
+  export type OutputTuple = [version: bigint];
+  export interface OutputObject {
+    version: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
 export namespace TransferEvent {
   export type InputTuple = [
     from: AddressLike,
@@ -120,11 +134,11 @@ export namespace TransferEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export interface ERC20 extends BaseContract {
-  connect(runner?: ContractRunner | null): ERC20;
+export interface ERC20Upgradeable extends BaseContract {
+  connect(runner?: ContractRunner | null): ERC20Upgradeable;
   waitForDeployment(): Promise<this>;
 
-  interface: ERC20Interface;
+  interface: ERC20UpgradeableInterface;
 
   queryFilter<TCEvent extends TypedContractEvent>(
     event: TCEvent,
@@ -253,6 +267,13 @@ export interface ERC20 extends BaseContract {
     ApprovalEvent.OutputObject
   >;
   getEvent(
+    key: "Initialized"
+  ): TypedContractEvent<
+    InitializedEvent.InputTuple,
+    InitializedEvent.OutputTuple,
+    InitializedEvent.OutputObject
+  >;
+  getEvent(
     key: "Transfer"
   ): TypedContractEvent<
     TransferEvent.InputTuple,
@@ -270,6 +291,17 @@ export interface ERC20 extends BaseContract {
       ApprovalEvent.InputTuple,
       ApprovalEvent.OutputTuple,
       ApprovalEvent.OutputObject
+    >;
+
+    "Initialized(uint64)": TypedContractEvent<
+      InitializedEvent.InputTuple,
+      InitializedEvent.OutputTuple,
+      InitializedEvent.OutputObject
+    >;
+    Initialized: TypedContractEvent<
+      InitializedEvent.InputTuple,
+      InitializedEvent.OutputTuple,
+      InitializedEvent.OutputObject
     >;
 
     "Transfer(address,address,uint256)": TypedContractEvent<

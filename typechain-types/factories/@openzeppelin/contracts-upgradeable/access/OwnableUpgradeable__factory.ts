@@ -4,11 +4,21 @@
 
 import { Contract, Interface, type ContractRunner } from "ethers";
 import type {
-  Ownable,
-  OwnableInterface,
-} from "../../../../@openzeppelin/contracts/access/Ownable";
+  OwnableUpgradeable,
+  OwnableUpgradeableInterface,
+} from "../../../../@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable";
 
 const _abi = [
+  {
+    inputs: [],
+    name: "InvalidInitialization",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "NotInitializing",
+    type: "error",
+  },
   {
     inputs: [
       {
@@ -30,6 +40,19 @@ const _abi = [
     ],
     name: "OwnableUnauthorizedAccount",
     type: "error",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint64",
+        name: "version",
+        type: "uint64",
+      },
+    ],
+    name: "Initialized",
+    type: "event",
   },
   {
     anonymous: false,
@@ -85,12 +108,15 @@ const _abi = [
   },
 ] as const;
 
-export class Ownable__factory {
+export class OwnableUpgradeable__factory {
   static readonly abi = _abi;
-  static createInterface(): OwnableInterface {
-    return new Interface(_abi) as OwnableInterface;
+  static createInterface(): OwnableUpgradeableInterface {
+    return new Interface(_abi) as OwnableUpgradeableInterface;
   }
-  static connect(address: string, runner?: ContractRunner | null): Ownable {
-    return new Contract(address, _abi, runner) as unknown as Ownable;
+  static connect(
+    address: string,
+    runner?: ContractRunner | null
+  ): OwnableUpgradeable {
+    return new Contract(address, _abi, runner) as unknown as OwnableUpgradeable;
   }
 }

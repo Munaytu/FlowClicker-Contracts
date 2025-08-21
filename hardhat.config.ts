@@ -1,5 +1,6 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
+import "@openzeppelin/hardhat-upgrades";
 import "dotenv/config";
 
 const SONIC_PRIVATE_KEY = process.env.SONIC_PRIVATE_KEY || "0xkey";

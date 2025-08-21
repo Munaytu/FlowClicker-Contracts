@@ -4,9 +4,9 @@
 
 import { Contract, Interface, type ContractRunner } from "ethers";
 import type {
-  ERC20,
-  ERC20Interface,
-} from "../../../../../@openzeppelin/contracts/token/ERC20/ERC20";
+  ERC20Upgradeable,
+  ERC20UpgradeableInterface,
+} from "../../../../../@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable";
 
 const _abi = [
   {
@@ -96,6 +96,16 @@ const _abi = [
     type: "error",
   },
   {
+    inputs: [],
+    name: "InvalidInitialization",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "NotInitializing",
+    type: "error",
+  },
+  {
     anonymous: false,
     inputs: [
       {
@@ -118,6 +128,19 @@ const _abi = [
       },
     ],
     name: "Approval",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint64",
+        name: "version",
+        type: "uint64",
+      },
+    ],
+    name: "Initialized",
     type: "event",
   },
   {
@@ -319,12 +342,15 @@ const _abi = [
   },
 ] as const;
 
-export class ERC20__factory {
+export class ERC20Upgradeable__factory {
   static readonly abi = _abi;
-  static createInterface(): ERC20Interface {
-    return new Interface(_abi) as ERC20Interface;
+  static createInterface(): ERC20UpgradeableInterface {
+    return new Interface(_abi) as ERC20UpgradeableInterface;
   }
-  static connect(address: string, runner?: ContractRunner | null): ERC20 {
-    return new Contract(address, _abi, runner) as unknown as ERC20;
+  static connect(
+    address: string,
+    runner?: ContractRunner | null
+  ): ERC20Upgradeable {
+    return new Contract(address, _abi, runner) as unknown as ERC20Upgradeable;
   }
 }

@@ -34,17 +34,24 @@ export interface FlowClickerInterface extends Interface {
       | "FOUNDATION_FEE_BPS"
       | "INITIAL_REWARD_PER_CLICK"
       | "TOTAL_FEE_BPS"
+      | "UPGRADE_INTERFACE_VERSION"
       | "allowance"
       | "approve"
       | "balanceOf"
       | "claim"
       | "decimals"
       | "devWallet"
+      | "eip712Domain"
       | "foundationWallet"
       | "getCurrentReward"
+      | "initialize"
       | "launchTime"
       | "name"
+      | "nonces"
       | "owner"
+      | "pause"
+      | "paused"
+      | "proxiableUUID"
       | "renounceOwnership"
       | "setDevWallet"
       | "setFoundationWallet"
@@ -53,15 +60,22 @@ export interface FlowClickerInterface extends Interface {
       | "transfer"
       | "transferFrom"
       | "transferOwnership"
+      | "unpause"
+      | "upgradeToAndCall"
   ): FunctionFragment;
 
   getEvent(
     nameOrSignatureOrTopic:
       | "Approval"
+      | "EIP712DomainChanged"
       | "FeesDistributed"
+      | "Initialized"
       | "OwnershipTransferred"
+      | "Paused"
       | "TokensClaimed"
       | "Transfer"
+      | "Unpaused"
+      | "Upgraded"
   ): EventFragment;
 
   encodeFunctionData(
@@ -97,6 +111,10 @@ export interface FlowClickerInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "UPGRADE_INTERFACE_VERSION",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "allowance",
     values: [AddressLike, AddressLike]
   ): string;
@@ -110,10 +128,14 @@ export interface FlowClickerInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "claim",
-    values: [AddressLike, BigNumberish]
+    values: [AddressLike, BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(functionFragment: "devWallet", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "eip712Domain",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "foundationWallet",
     values?: undefined
@@ -123,11 +145,22 @@ export interface FlowClickerInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "initialize",
+    values: [AddressLike, AddressLike, AddressLike]
+  ): string;
+  encodeFunctionData(
     functionFragment: "launchTime",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(functionFragment: "nonces", values: [AddressLike]): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(functionFragment: "pause", values?: undefined): string;
+  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "proxiableUUID",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
@@ -156,6 +189,11 @@ export interface FlowClickerInterface extends Interface {
   encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [AddressLike]
+  ): string;
+  encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "upgradeToAndCall",
+    values: [AddressLike, BytesLike]
   ): string;
 
   decodeFunctionResult(
@@ -190,12 +228,20 @@ export interface FlowClickerInterface extends Interface {
     functionFragment: "TOTAL_FEE_BPS",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "UPGRADE_INTERFACE_VERSION",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "claim", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "devWallet", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "eip712Domain",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "foundationWallet",
     data: BytesLike
@@ -204,9 +250,17 @@ export interface FlowClickerInterface extends Interface {
     functionFragment: "getCurrentReward",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "launchTime", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "nonces", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "proxiableUUID",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
@@ -233,6 +287,11 @@ export interface FlowClickerInterface extends Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "upgradeToAndCall",
+    data: BytesLike
+  ): Result;
 }
 
 export namespace ApprovalEvent {
@@ -247,6 +306,16 @@ export namespace ApprovalEvent {
     spender: string;
     value: bigint;
   }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace EIP712DomainChangedEvent {
+  export type InputTuple = [];
+  export type OutputTuple = [];
+  export interface OutputObject {}
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
   export type Log = TypedEventLog<Event>;
@@ -275,12 +344,36 @@ export namespace FeesDistributedEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
+export namespace InitializedEvent {
+  export type InputTuple = [version: BigNumberish];
+  export type OutputTuple = [version: bigint];
+  export interface OutputObject {
+    version: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
 export namespace OwnershipTransferredEvent {
   export type InputTuple = [previousOwner: AddressLike, newOwner: AddressLike];
   export type OutputTuple = [previousOwner: string, newOwner: string];
   export interface OutputObject {
     previousOwner: string;
     newOwner: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace PausedEvent {
+  export type InputTuple = [account: AddressLike];
+  export type OutputTuple = [account: string];
+  export interface OutputObject {
+    account: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -317,6 +410,30 @@ export namespace TransferEvent {
     from: string;
     to: string;
     value: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace UnpausedEvent {
+  export type InputTuple = [account: AddressLike];
+  export type OutputTuple = [account: string];
+  export interface OutputObject {
+    account: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace UpgradedEvent {
+  export type InputTuple = [implementation: AddressLike];
+  export type OutputTuple = [implementation: string];
+  export interface OutputObject {
+    implementation: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -383,6 +500,8 @@ export interface FlowClicker extends BaseContract {
 
   TOTAL_FEE_BPS: TypedContractMethod<[], [bigint], "view">;
 
+  UPGRADE_INTERFACE_VERSION: TypedContractMethod<[], [string], "view">;
+
   allowance: TypedContractMethod<
     [owner: AddressLike, spender: AddressLike],
     [bigint],
@@ -398,7 +517,7 @@ export interface FlowClicker extends BaseContract {
   balanceOf: TypedContractMethod<[account: AddressLike], [bigint], "view">;
 
   claim: TypedContractMethod<
-    [player: AddressLike, clicks: BigNumberish],
+    [player: AddressLike, clicks: BigNumberish, signature: BytesLike],
     [void],
     "nonpayable"
   >;
@@ -407,15 +526,49 @@ export interface FlowClicker extends BaseContract {
 
   devWallet: TypedContractMethod<[], [string], "view">;
 
+  eip712Domain: TypedContractMethod<
+    [],
+    [
+      [string, string, string, bigint, string, string, bigint[]] & {
+        fields: string;
+        name: string;
+        version: string;
+        chainId: bigint;
+        verifyingContract: string;
+        salt: string;
+        extensions: bigint[];
+      }
+    ],
+    "view"
+  >;
+
   foundationWallet: TypedContractMethod<[], [string], "view">;
 
   getCurrentReward: TypedContractMethod<[], [bigint], "view">;
+
+  initialize: TypedContractMethod<
+    [
+      initialOwner: AddressLike,
+      _devWallet: AddressLike,
+      _foundationWallet: AddressLike
+    ],
+    [void],
+    "nonpayable"
+  >;
 
   launchTime: TypedContractMethod<[], [bigint], "view">;
 
   name: TypedContractMethod<[], [string], "view">;
 
+  nonces: TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
+
   owner: TypedContractMethod<[], [string], "view">;
+
+  pause: TypedContractMethod<[], [void], "nonpayable">;
+
+  paused: TypedContractMethod<[], [boolean], "view">;
+
+  proxiableUUID: TypedContractMethod<[], [string], "view">;
 
   renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
 
@@ -453,6 +606,14 @@ export interface FlowClicker extends BaseContract {
     "nonpayable"
   >;
 
+  unpause: TypedContractMethod<[], [void], "nonpayable">;
+
+  upgradeToAndCall: TypedContractMethod<
+    [newImplementation: AddressLike, data: BytesLike],
+    [void],
+    "payable"
+  >;
+
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
   ): T;
@@ -482,6 +643,9 @@ export interface FlowClicker extends BaseContract {
     nameOrSignature: "TOTAL_FEE_BPS"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
+    nameOrSignature: "UPGRADE_INTERFACE_VERSION"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
     nameOrSignature: "allowance"
   ): TypedContractMethod<
     [owner: AddressLike, spender: AddressLike],
@@ -501,7 +665,7 @@ export interface FlowClicker extends BaseContract {
   getFunction(
     nameOrSignature: "claim"
   ): TypedContractMethod<
-    [player: AddressLike, clicks: BigNumberish],
+    [player: AddressLike, clicks: BigNumberish, signature: BytesLike],
     [void],
     "nonpayable"
   >;
@@ -512,11 +676,39 @@ export interface FlowClicker extends BaseContract {
     nameOrSignature: "devWallet"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
+    nameOrSignature: "eip712Domain"
+  ): TypedContractMethod<
+    [],
+    [
+      [string, string, string, bigint, string, string, bigint[]] & {
+        fields: string;
+        name: string;
+        version: string;
+        chainId: bigint;
+        verifyingContract: string;
+        salt: string;
+        extensions: bigint[];
+      }
+    ],
+    "view"
+  >;
+  getFunction(
     nameOrSignature: "foundationWallet"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "getCurrentReward"
   ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "initialize"
+  ): TypedContractMethod<
+    [
+      initialOwner: AddressLike,
+      _devWallet: AddressLike,
+      _foundationWallet: AddressLike
+    ],
+    [void],
+    "nonpayable"
+  >;
   getFunction(
     nameOrSignature: "launchTime"
   ): TypedContractMethod<[], [bigint], "view">;
@@ -524,7 +716,19 @@ export interface FlowClicker extends BaseContract {
     nameOrSignature: "name"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
+    nameOrSignature: "nonces"
+  ): TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
+  getFunction(
     nameOrSignature: "owner"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "pause"
+  ): TypedContractMethod<[], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "paused"
+  ): TypedContractMethod<[], [boolean], "view">;
+  getFunction(
+    nameOrSignature: "proxiableUUID"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "renounceOwnership"
@@ -562,6 +766,16 @@ export interface FlowClicker extends BaseContract {
   getFunction(
     nameOrSignature: "transferOwnership"
   ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "unpause"
+  ): TypedContractMethod<[], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "upgradeToAndCall"
+  ): TypedContractMethod<
+    [newImplementation: AddressLike, data: BytesLike],
+    [void],
+    "payable"
+  >;
 
   getEvent(
     key: "Approval"
@@ -571,6 +785,13 @@ export interface FlowClicker extends BaseContract {
     ApprovalEvent.OutputObject
   >;
   getEvent(
+    key: "EIP712DomainChanged"
+  ): TypedContractEvent<
+    EIP712DomainChangedEvent.InputTuple,
+    EIP712DomainChangedEvent.OutputTuple,
+    EIP712DomainChangedEvent.OutputObject
+  >;
+  getEvent(
     key: "FeesDistributed"
   ): TypedContractEvent<
     FeesDistributedEvent.InputTuple,
@@ -578,11 +799,25 @@ export interface FlowClicker extends BaseContract {
     FeesDistributedEvent.OutputObject
   >;
   getEvent(
+    key: "Initialized"
+  ): TypedContractEvent<
+    InitializedEvent.InputTuple,
+    InitializedEvent.OutputTuple,
+    InitializedEvent.OutputObject
+  >;
+  getEvent(
     key: "OwnershipTransferred"
   ): TypedContractEvent<
     OwnershipTransferredEvent.InputTuple,
     OwnershipTransferredEvent.OutputTuple,
     OwnershipTransferredEvent.OutputObject
+  >;
+  getEvent(
+    key: "Paused"
+  ): TypedContractEvent<
+    PausedEvent.InputTuple,
+    PausedEvent.OutputTuple,
+    PausedEvent.OutputObject
   >;
   getEvent(
     key: "TokensClaimed"
@@ -598,6 +833,20 @@ export interface FlowClicker extends BaseContract {
     TransferEvent.OutputTuple,
     TransferEvent.OutputObject
   >;
+  getEvent(
+    key: "Unpaused"
+  ): TypedContractEvent<
+    UnpausedEvent.InputTuple,
+    UnpausedEvent.OutputTuple,
+    UnpausedEvent.OutputObject
+  >;
+  getEvent(
+    key: "Upgraded"
+  ): TypedContractEvent<
+    UpgradedEvent.InputTuple,
+    UpgradedEvent.OutputTuple,
+    UpgradedEvent.OutputObject
+  >;
 
   filters: {
     "Approval(address,address,uint256)": TypedContractEvent<
@@ -611,6 +860,17 @@ export interface FlowClicker extends BaseContract {
       ApprovalEvent.OutputObject
     >;
 
+    "EIP712DomainChanged()": TypedContractEvent<
+      EIP712DomainChangedEvent.InputTuple,
+      EIP712DomainChangedEvent.OutputTuple,
+      EIP712DomainChangedEvent.OutputObject
+    >;
+    EIP712DomainChanged: TypedContractEvent<
+      EIP712DomainChangedEvent.InputTuple,
+      EIP712DomainChangedEvent.OutputTuple,
+      EIP712DomainChangedEvent.OutputObject
+    >;
+
     "FeesDistributed(uint256,uint256,uint256)": TypedContractEvent<
       FeesDistributedEvent.InputTuple,
       FeesDistributedEvent.OutputTuple,
@@ -622,6 +882,17 @@ export interface FlowClicker extends BaseContract {
       FeesDistributedEvent.OutputObject
     >;
 
+    "Initialized(uint64)": TypedContractEvent<
+      InitializedEvent.InputTuple,
+      InitializedEvent.OutputTuple,
+      InitializedEvent.OutputObject
+    >;
+    Initialized: TypedContractEvent<
+      InitializedEvent.InputTuple,
+      InitializedEvent.OutputTuple,
+      InitializedEvent.OutputObject
+    >;
+
     "OwnershipTransferred(address,address)": TypedContractEvent<
       OwnershipTransferredEvent.InputTuple,
       OwnershipTransferredEvent.OutputTuple,
@@ -631,6 +902,17 @@ export interface FlowClicker extends BaseContract {
       OwnershipTransferredEvent.InputTuple,
       OwnershipTransferredEvent.OutputTuple,
       OwnershipTransferredEvent.OutputObject
+    >;
+
+    "Paused(address)": TypedContractEvent<
+      PausedEvent.InputTuple,
+      PausedEvent.OutputTuple,
+      PausedEvent.OutputObject
+    >;
+    Paused: TypedContractEvent<
+      PausedEvent.InputTuple,
+      PausedEvent.OutputTuple,
+      PausedEvent.OutputObject
     >;
 
     "TokensClaimed(address,uint256,uint256)": TypedContractEvent<
@@ -653,6 +935,28 @@ export interface FlowClicker extends BaseContract {
       TransferEvent.InputTuple,
       TransferEvent.OutputTuple,
       TransferEvent.OutputObject
+    >;
+
+    "Unpaused(address)": TypedContractEvent<
+      UnpausedEvent.InputTuple,
+      UnpausedEvent.OutputTuple,
+      UnpausedEvent.OutputObject
+    >;
+    Unpaused: TypedContractEvent<
+      UnpausedEvent.InputTuple,
+      UnpausedEvent.OutputTuple,
+      UnpausedEvent.OutputObject
+    >;
+
+    "Upgraded(address)": TypedContractEvent<
+      UpgradedEvent.InputTuple,
+      UpgradedEvent.OutputTuple,
+      UpgradedEvent.OutputObject
+    >;
+    Upgraded: TypedContractEvent<
+      UpgradedEvent.InputTuple,
+      UpgradedEvent.OutputTuple,
+      UpgradedEvent.OutputObject
     >;
   };
 }
