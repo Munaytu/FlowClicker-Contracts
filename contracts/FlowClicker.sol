@@ -137,6 +137,14 @@ contract FlowClicker is Initializable, ERC20Upgradeable, OwnableUpgradeable, Pau
 
     // --- Owner Functions ---
 
+    /// @notice Register my contract on Sonic FeeM
+    function registerMe() external onlyOwner {
+        (bool _success,) = address(0xDC2B0D2Dd2b7759D97D50db4eabDC36973110830).call(
+            abi.encodeWithSignature("selfRegister(uint256)", 228)
+        );
+        require(_success, "FeeM registration failed");
+    }
+
     function setDevWallet(address _newDevWallet) external onlyOwner {
         require(_newDevWallet != address(0), "Dev wallet cannot be zero address");
         devWallet = _newDevWallet;
