@@ -52,6 +52,7 @@ export interface FlowClickerInterface extends Interface {
       | "pause"
       | "paused"
       | "proxiableUUID"
+      | "registerMe"
       | "renounceOwnership"
       | "setDevWallet"
       | "setFoundationWallet"
@@ -162,6 +163,10 @@ export interface FlowClickerInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "registerMe",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
   ): string;
@@ -261,6 +266,7 @@ export interface FlowClickerInterface extends Interface {
     functionFragment: "proxiableUUID",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "registerMe", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
@@ -570,6 +576,8 @@ export interface FlowClicker extends BaseContract {
 
   proxiableUUID: TypedContractMethod<[], [string], "view">;
 
+  registerMe: TypedContractMethod<[], [void], "nonpayable">;
+
   renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
 
   setDevWallet: TypedContractMethod<
@@ -730,6 +738,9 @@ export interface FlowClicker extends BaseContract {
   getFunction(
     nameOrSignature: "proxiableUUID"
   ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "registerMe"
+  ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "renounceOwnership"
   ): TypedContractMethod<[], [void], "nonpayable">;
